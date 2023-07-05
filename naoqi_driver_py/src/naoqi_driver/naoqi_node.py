@@ -34,7 +34,10 @@ import rospy
 try:
     from naoqi import ALProxy
 except ImportError:
-    raise RuntimeError("Error importing NaoQI. Please make sure that Aldebaran's NaoQI API is in your PYTHONPATH.")
+    raise RuntimeError(
+        "Error importing NaoQI. Please make sure that Aldebaran's NaoQI API is in your PYTHONPATH."
+    )
+
 
 class NaoqiNode(Thread):
     """
@@ -53,6 +56,7 @@ class NaoqiNode(Thread):
             # do something
         # do some post processing
     """
+
     def __init__(self, name):
         """
         :param name: the name of the ROS node
@@ -76,13 +80,26 @@ class NaoqiNode(Thread):
 
         # get connection from command line:
         from argparse import ArgumentParser
+
         parser = ArgumentParser()
-        parser.add_argument("--pip", dest="pip", default=default_ip,
-                          help="IP/hostname of parent broker. Default is 127.0.0.1.", metavar="IP")
-        parser.add_argument("--pport", dest="pport", default=default_port, type=int,
-                          help="port of parent broker. Default is 9559.", metavar="PORT")
+        parser.add_argument(
+            "--pip",
+            dest="pip",
+            default=default_ip,
+            help="IP/hostname of parent broker. Default is 127.0.0.1.",
+            metavar="IP",
+        )
+        parser.add_argument(
+            "--pport",
+            dest="pport",
+            default=default_port,
+            type=int,
+            help="port of parent broker. Default is 9559.",
+            metavar="PORT",
+        )
 
         import sys
+
         args, unknown = parser.parse_known_args(args=rospy.myargv(argv=sys.argv)[1:])
         self.pip = args.pip
         self.pport = args.pport
@@ -96,14 +113,14 @@ class NaoqiNode(Thread):
         """
         Callback function called whenever rospy.spin() stops
         """
-        rospy.loginfo('Stopping ' + self.__name)
+        rospy.loginfo("Stopping " + self.__name)
 
         self.__stop_thread = True
         # wait for the thread to be done
         if self.is_alive():
             self.join()
 
-        rospy.loginfo(self.__name + ' stopped')
+        rospy.loginfo(self.__name + " stopped")
 
     def run(self):
         """
@@ -117,7 +134,7 @@ class NaoqiNode(Thread):
             # do something
         # do some post processing
         """
-        raise NotImplementedError('Implement the run function of your NaoNode !')
+        raise NotImplementedError("Implement the run function of your NaoNode !")
 
     def is_looping(self):
         """
@@ -136,10 +153,12 @@ class NaoqiNode(Thread):
 
         proxy = None
         try:
-            proxy = ALProxy(name,self.pip,self.pport)
-        except RuntimeError,e:
+            proxy = ALProxy(name, self.pip, self.pport)
+        except RuntimeError as e:
             if warn:
-                rospy.logerr("Could not create Proxy to \"%s\". \nException message:\n%s",name, e)
+                rospy.logerr(
+                    'Could not create Proxy to "%s". \nException message:\n%s', name, e
+                )
 
         self.__proxies[name] = proxy
         return proxy
@@ -153,7 +172,7 @@ class NaoqiNode(Thread):
         :return: a distutils.version.LooseVersion object with the NAOqi version
         """
         if self.__naoqi_version is None:
-            proxy = self.get_proxy('ALMemory')
+            proxy = self.get_proxy("ALMemory")
             if proxy is None:
                 # exiting is bad but it should not happen
                 # except maybe with NAOqi versions < 1.6 or future ones
@@ -162,6 +181,7 @@ class NaoqiNode(Thread):
                 exit(1)
 
             from distutils.version import LooseVersion
+
             self.__naoqi_version = LooseVersion(proxy.version())
 
         return self.__naoqi_version

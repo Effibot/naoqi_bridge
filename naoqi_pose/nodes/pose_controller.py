@@ -150,14 +150,14 @@ class PoseController(NaoqiNode):
                 self.motionProxy.setAngles(list(msg.joint_names), list(msg.joint_angles), msg.speed)
             else:
                 self.motionProxy.changeAngles(list(msg.joint_names), list(msg.joint_angles), msg.speed)
-        except RuntimeError,e:
+        except RuntimeError as e:
             rospy.logerr("Exception caught:\n%s", e)
 
     def handleJointStiffness(self, msg):
         rospy.logdebug("Received a joint angle stiffness")
         try:
             self.motionProxy.setStiffnesses(list(msg.name), list(msg.effort))
-        except RuntimeError,e:
+        except RuntimeError as e:
             rospy.logerr("Exception caught:\n%s", e)
 
     def handleStiffnessSrv(self, req):
@@ -165,7 +165,7 @@ class PoseController(NaoqiNode):
             self.motionProxy.stiffnessInterpolation("Body", 1.0, 0.5)
             rospy.loginfo("Body stiffness enabled")
             return EmptyResponse()
-        except RuntimeError,e:
+        except RuntimeError as e:
             rospy.logerr("Exception caught:\n%s", e)
             return None
 
@@ -174,7 +174,7 @@ class PoseController(NaoqiNode):
             self.motionProxy.stiffnessInterpolation("Body", 0.0, 0.5)
             rospy.loginfo("Body stiffness removed")
             return EmptyResponse()
-        except RuntimeError,e:
+        except RuntimeError as e:
             rospy.logerr("Exception caught:\n%s", e)
             return None
 
@@ -183,7 +183,7 @@ class PoseController(NaoqiNode):
             self.motionProxy.wakeUp()
             rospy.loginfo("Wake Up")
             return EmptyResponse()
-        except RuntimeError,e:
+        except RuntimeError as e:
             rospy.logerr("Exception caught:\n%s", e)
             return None
 
@@ -192,7 +192,7 @@ class PoseController(NaoqiNode):
             self.motionProxy.rest()
             rospy.loginfo("Rest")
             return EmptyResponse()
-        except RuntimeError,e:
+        except RuntimeError as e:
             rospy.logerr("Exception caught:\n%s", e)
             return None
 
@@ -425,7 +425,7 @@ class PoseController(NaoqiNode):
         try:
             self.motionProxy.stiffnessInterpolation("Body", 1.0, 0.5)
             rospy.loginfo("Body stiffness enabled")
-        except RuntimeError,e:
+        except RuntimeError as e:
             rospy.logerr("Exception caught:\n%s", e)
             return
 
